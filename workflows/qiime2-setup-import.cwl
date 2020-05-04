@@ -4,6 +4,7 @@ cwlVersion: v1.0
 class: Workflow
 requirements:
 - class: SubworkflowFeatureRequirement
+
 label: qiime2: setup job and importing data from manifest
 
 inputs:
@@ -31,6 +32,6 @@ steps:
       input_path: manifest_file
       type: SampleData[PairedEndSequencesWithQuality]
       input_format: PairedEndFastqManifestPhred33V2
-      output_filename: setup/working_dir/$(inputs.sequences_artifact_filename)
+      output_filename: sequences_artifact_filename
     out:
       - sequences_artifact
