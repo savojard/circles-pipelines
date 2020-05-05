@@ -80,7 +80,7 @@ steps:
     run: ../tools/qiime2-tools-import.cwl
     in:
       input_path: manifest_file
-      input_type: "SampleData[PairedEndSequencesWithQuality]
+      input_type: "SampleData[PairedEndSequencesWithQuality]"
       input_format: "PairedEndFastqManifestPhred33V2"
       output_filename: imported_file_name
     out:
