@@ -1,4 +1,6 @@
 input_type: SampleData[PairedEndSequencesWithQuality]
 input_path: /home/condasys/qiime2-test/running-example.manifest.tsv
 input_format: PairedEndFastqManifestPhred33V2
-output_filename: /home/condasys/qiime2-test/cwl/qiime2-tools-import-output.qza
+output_filename:
+  class: File
+  location: /home/condasys/qiime2-test/cwl/qiime2-tools-import-output.qza
