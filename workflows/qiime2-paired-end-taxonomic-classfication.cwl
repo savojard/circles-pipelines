@@ -41,6 +41,12 @@ inputs:
     type: string
     label: "name of assigned taxonomy visualization artifact"
     default: taxonomy.qzv
+  input_type:
+    type: string
+    default: "SampleData[PairedEndSequencesWithQuality]"
+  input_format:
+    type: string
+    default: "PairedEndFastqManifestPhred33V2"
   trim_left_f:
     type: int
     default: 0
@@ -80,8 +86,8 @@ steps:
     run: ../tools/qiime2-tools-import.cwl
     in:
       input_path: manifest_file
-      input_type: "SampleData[PairedEndSequencesWithQuality]"
-      input_format: "PairedEndFastqManifestPhred33V2"
+      input_type: input_type
+      input_format: input_format
       output_filename: imported_file_name
     out:
       - imported_file
