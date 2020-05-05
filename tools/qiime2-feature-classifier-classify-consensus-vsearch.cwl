@@ -31,7 +31,7 @@ inputs:
   max_accepts:
     inputBinding:
       prefix: --p-maxaccepts
-    type: integer
+    type: int
     label: Maximum number of hits to keep for each query
     default: 100
 outputs:
