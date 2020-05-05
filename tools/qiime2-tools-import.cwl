@@ -8,7 +8,7 @@ hints:
   - $import: qiime2-docker-hint.yml
 
 inputs:
-  type:
+  input_type:
     type: string
     label: "type of the qiime2 artifact that will be created"
     inputBinding:
