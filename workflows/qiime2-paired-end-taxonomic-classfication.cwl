@@ -62,25 +62,25 @@ inputs:
 outputs:
   imported_sequence_artifact:
     type: File
-    outputSource: import_data/imported_file
+    outputSource: import_data/sequences_artifact
   repr_seq_artifact:
     type: File
-    outputSource: dada2-denoise/repr_seq_file
+    outputSource: dada2-denoise/representative_sequences
   otu_table_artifact:
     type: File
-    outputSource: dada2-denoise/otu_table_file
+    outputSource: dada2-denoise/table
   denoise_stat_artifact:
     type: File
-    outputSource: dada2-denoise/denoise_stat_file
+    outputSource: dada2-denoise/denoising_stats
   denoise_stat_visualization_artifact:
     type: File
-    outputSource: dada2-visualization/denoise_stat_visualization_file
+    outputSource: dada2-visualization/visualization_artifact
   taxonomy_artifact:
     type: File
-    outputSource: feature-classify/taxonomy_file
+    outputSource: feature-classify/out_taxa
   taxonomy_visualization_artifact:
     type: File
-    outputSource: taxonomy-visualization/taxonomy_visualization_file
+    outputSource: taxonomy-visualization/visualization_artifact
 steps:
   import_data:
     run: ../tools/qiime2-tools-import.cwl
@@ -90,7 +90,7 @@ steps:
       input_format: input_format
       output_filename: imported_file_name
     out:
-      - imported_file
+      - sequences_artifact
   dada2-denoise:
     run: ../tools/qiime2-dada2-denoise-paired.cwl
     in:
@@ -103,16 +103,16 @@ steps:
       table_filename: otu_table_file_name
       denoising_stats_filename: denoise_stat_file_name
     out:
-      - repr_seq_file
-      - otu_table_file
-      - denoise_stat_file
+      - representative_sequences
+      - table
+      - denoising_stats
   dada2-visualization:
     run: ../tools/qiime2-metadata-tabulate.cwl
     in:
       input_file: dada2-denoise/denoise_stat_file
       visualization_filename: denoise_stat_visualization_file_name
     out:
-      - denoise_stat_visualization_file
+      - visualization_artifact
   feature-classify:
     run: ../tools/qiime2-feature-classifier-classify-consensus-vsearch.cwl
     in:
@@ -121,11 +121,11 @@ steps:
       reference_taxonomy: reference_taxonomy_file
       taxonomy_filename: taxonomy_file_name
     out:
-      - taxonomy_file
+      - out_taxa
   taxonomy-visualization:
     run: ../tools/qiime2-metadata-tabulate.cwl
     in:
       input_file: feature-classify/taxonomy_file
       visualization_filename: taxonomy_visualization_file_name
     out:
-      - taxonomy_visualization_file
+      - visualization_artifact
