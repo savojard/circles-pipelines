@@ -94,7 +94,7 @@ steps:
   dada2-denoise:
     run: ../tools/qiime2-dada2-denoise-paired.cwl
     in:
-      demultiplexed_seqs: import_data/imported_file
+      demultiplexed_seqs: import_data/sequences_artifact
       trim_left_f: trim_left_f
       trim_left_r: trim_left_r
       trunc_len_f: trunc_len_f
@@ -109,14 +109,14 @@ steps:
   dada2-visualization:
     run: ../tools/qiime2-metadata-tabulate.cwl
     in:
-      input_file: dada2-denoise/denoise_stat_file
+      input_file: dada2-denoise/denoising_stats
       visualization_filename: denoise_stat_visualization_file_name
     out:
       - visualization_artifact
   feature-classify:
     run: ../tools/qiime2-feature-classifier-classify-consensus-vsearch.cwl
     in:
-      rep_seqs: dada2-denoise/repr_seq_file
+      rep_seqs: dada2-denoise/representative_sequences
       reference_reads: reference_reads_file
       reference_taxonomy: reference_taxonomy_file
       taxonomy_filename: taxonomy_file_name
@@ -125,7 +125,7 @@ steps:
   taxonomy-visualization:
     run: ../tools/qiime2-metadata-tabulate.cwl
     in:
-      input_file: feature-classify/taxonomy_file
+      input_file: feature-classify/out_taxa
       visualization_filename: taxonomy_visualization_file_name
     out:
       - visualization_artifact
