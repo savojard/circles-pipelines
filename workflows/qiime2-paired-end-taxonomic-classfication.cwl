@@ -79,7 +79,6 @@ outputs:
   taxonomy_visualization_artifact:
     type: File
     outputSource: feature-classify/taxonomy_visualization_file
-
 steps:
   import_data:
     run: ../tools/qiime2-tools-import.cwl
@@ -90,7 +89,6 @@ steps:
       output_filename: imported_file_name
     out:
       - imported_file
-
   dada2-denoise:
     run: ../tools/qiime2-dada2-denoise-paired.cwl
     in:
@@ -106,7 +104,6 @@ steps:
       - repr_seq_file
       - otu_table_file
       - denoise_stat_file
-
   dada2-visualization:
     run: ../tools/qiime2-metadata-tabulate.cwl
     in:
@@ -114,7 +111,6 @@ steps:
       visualization_filename: denoise_stat_visualization_file_name
     out:
       - denoise_stat_visualization_file
-
   feature-classify:
     run: ../tools/qiime2-feature-classifier-classify-consensus-vsearch.cwl
     in:
@@ -124,7 +120,6 @@ steps:
       taxonomy_filename: taxonomy_file_name
     out:
       - taxonomy_file
-
   taxonomy-visualization:
     run: ../tools/qiime2-metadata-tabulate.cwl
     in:
