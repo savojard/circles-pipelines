@@ -32,6 +32,6 @@ outputs:
   sequences_artifact:
     type: File
     outputBinding:
-      glob: imported_sequences.qza
+      glob: $(inputs.output_filename)
 
 baseCommand: ["qiime", "tools", "import"]
