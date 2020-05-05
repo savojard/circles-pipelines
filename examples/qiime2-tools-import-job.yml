@@ -1,6 +1,6 @@
 input_type: SampleData[PairedEndSequencesWithQuality]
 input_path:
   class: File
-  path: /home/condasys/qiime2-test/running-example.manifest.tsv
+  path: running-example.manifest.tsv
 input_format: PairedEndFastqManifestPhred33V2
 output_filename: qiime2-tools-import-output.qza
