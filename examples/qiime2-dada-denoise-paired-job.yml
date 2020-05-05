@@ -1,0 +1,10 @@
+demultiplexed_seqs:
+  class: File
+  path: qiime2-tools-import-output.qza
+trim_left_f: 13
+trim_left_r: 13
+trunc_len_f: 0
+trunc_len_r: 0
+representative_sequences_filename: qiime2-dada2-denoise-paired-rep-seq-output.qza
+table_filename: qiime2-dada2-denoise-paired-table-output.qza
+denoising_stats_filename: qiime2-dada2-denoise-paired-stat-output.qza
