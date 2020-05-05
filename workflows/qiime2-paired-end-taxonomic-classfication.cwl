@@ -2,11 +2,9 @@ cwlVersion: v1.0
 class: Workflow
 requirements:
 - class: SubworkflowFeatureRequirement
-label: qiime2: perform complete taxonomic of paired-end samples
-
+label: "qiime2 perform complete taxonomic of paired-end samples"
 hints:
   - $import: qiime2-docker-hint.yml
-
 inputs:
   manifest_file:
     type: File
