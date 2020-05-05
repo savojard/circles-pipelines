@@ -74,14 +74,14 @@ outputs:
     outputSource: feature-classify/taxonomy_file
   taxonomy_visualization_artifact:
     type: File
-    outputSource: feature-classify/taxonomy_visualization_file
+    outputSource: taxonomy-visualization/taxonomy_visualization_file
 steps:
   import_data:
     run: ../tools/qiime2-tools-import.cwl
     in:
       input_path: manifest_file
-      input_type: SampleData[PairedEndSequencesWithQuality]
-      input_format: PairedEndFastqManifestPhred33V2
+      input_type: "SampleData[PairedEndSequencesWithQuality]
+      input_format: "PairedEndFastqManifestPhred33V2"
       output_filename: imported_file_name
     out:
       - imported_file
