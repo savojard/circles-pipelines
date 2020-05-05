@@ -24,7 +24,7 @@ inputs:
     inputBinding:
       prefix: "--input-format"
   output_filename:
-    type: File
+    type: string
     label: "filename to use for output file (qza format)"
     inputBinding:
       prefix: "--output-path"
@@ -32,6 +32,6 @@ outputs:
   sequences_artifact:
     type: File
     outputBinding:
-      glob: $(inputs.output_filename.basename)
+      glob: $(inputs.output_filename)
 
 baseCommand: ["qiime", "tools", "import"]
