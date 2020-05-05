@@ -2,8 +2,10 @@ cwlVersion: v1.0
 class: Workflow
 requirements:
 - class: SubworkflowFeatureRequirement
-
 label: qiime2: perform complete taxonomic of paired-end samples
+
+hints:
+  - $import: qiime2-docker-hint.yml
 
 inputs:
   manifest_file:
@@ -43,7 +45,6 @@ inputs:
     type: string
     label: "name of assigned taxonomy visualization artifact"
     default: taxonomy.qzv
-
   trim_left_f:
     type: int
     default: 0
