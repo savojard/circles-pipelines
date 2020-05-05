@@ -1,0 +1,11 @@
+rep_seqs:
+  class: File
+  path: qiime2-dada2-denoise-paired-rep-seq-output.qza
+reference_reads:
+  class: File
+  path: /home/condasys/qiime2-test/silva132_99.qza
+reference_taxonomy:
+  class: File
+  path: /home/condasys/qiime2-test/silva132_99_ref_taxonomy.qza
+taxonomy_filename: qiime2-feature-classifier-classify-consiensus-taxonomy-output.qza
+max_accepts: 100
