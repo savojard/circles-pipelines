@@ -14,8 +14,8 @@ inputs:
     inputBinding:
       prefix: "--type"
   input_path:
-    type: Directory
-    label: "path to file or directory that should be imported"
+    type: string
+    label: "path to file that should be imported"
     inputBinding:
       prefix: "--input-path"
   input_format:
