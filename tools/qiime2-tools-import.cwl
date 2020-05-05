@@ -14,7 +14,7 @@ inputs:
     inputBinding:
       prefix: "--type"
   input_path:
-    type: string
+    type: File
     label: "path to file that should be imported"
     inputBinding:
       prefix: "--input-path"
@@ -32,6 +32,6 @@ outputs:
   sequences_artifact:
     type: File
     outputBinding:
-      glob: $(inputs.output_filename)
+      glob: $(inputs.input_path.nameroot).qza
 
 baseCommand: ["qiime", "tools", "import"]
