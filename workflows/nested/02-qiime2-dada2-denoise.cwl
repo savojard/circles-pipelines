@@ -61,6 +61,7 @@ steps:
       trim_left_r: trim_left_r
       trunc_len_f: trunc_len_f
       trunc_len_r: trunc_len_r
+      trunc_q: trunc_q
       representative_sequences_filename: repr_seq_file_name
       table_filename: otu_table_file_name
       denoising_stats_filename: denoise_stat_file_name
