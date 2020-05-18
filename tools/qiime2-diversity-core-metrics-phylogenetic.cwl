@@ -35,6 +35,7 @@ inputs:
       prefix: "--output-dir"
 outputs:
   rarefied_table:
+    type: File
     outputBinding:
       glob: $(inputs.output_dir)/rarefied_table.qza
 
