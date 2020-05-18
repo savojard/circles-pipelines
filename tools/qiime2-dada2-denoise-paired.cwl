@@ -33,6 +33,11 @@ inputs:
     label: "position at which reverse sequences should be truncated"
     inputBinding:
       prefix: "--p-trunc-len-r"
+  trunc_q:
+    type: int
+    label: "Reads are truncated at the first instance of a quality score less than or equal to this value"
+    inputBinding:
+      prefix: "--p-trunc-q"
   representative_sequences_filename:
     type: string
     label: "resulting feature sequences filename"
