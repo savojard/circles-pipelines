@@ -36,7 +36,18 @@ outputs:
   taxonomy_visualization_artifact:
     type: File
     outputSource: taxonomy/taxonomy_visualization_artifact
-
+  aligned_repr_seq_artifact:
+    type: File
+    outputSource: phylogeny/aligned_repr_seq_artifact
+  masked_repr_seq_artifact:
+    type: File
+    outputSource: phylogeny/masked_repr_seq_artifact
+  unrooted_tree_artifact:
+    type: File
+    outputSource: phylogeny/unrooted_tree_artifact
+  rooted_tree_artifact:
+    type: File
+    outputSource: phylogeny/rooted_tree_artifact
 steps:
   import_data:
     run: nested/01-qiime2-import.cwl
@@ -54,6 +65,15 @@ steps:
       - otu_table_artifact
       - denoise_stat_artifact
       - denoise_stat_visualization_artifact
+  phylogeny:
+    run: nested/03-qiime2-phylogeny.cwl
+    in:
+      representative_sequences: dada2/repr_seq_artifact
+    out:
+      - aligned_repr_seq_artifact
+      - masked_repr_seq_artifact
+      - unrooted_tree_artifact
+      - rooted_tree_artifact
   taxonomy:
     run: nested/04-qiime2-taxonomy.cwl
     in:
