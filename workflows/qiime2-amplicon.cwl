@@ -11,6 +11,8 @@ inputs:
     type: File
   reference_taxonomy_file:
     type: File
+  trunc_q:
+    type: int
 
 outputs:
   imported_sequences_artifact:
@@ -46,6 +48,7 @@ steps:
     run: nested/02-qiime2-dada2-denoise.cwl
     in:
       demux_sequences_artifact: import_data/imported_sequences_artifact
+      trunc_q: trunc_q
     out:
       - repr_seq_artifact
       - otu_table_artifact

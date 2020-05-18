@@ -7,3 +7,4 @@ reference_reads_file:
 reference_taxonomy_file:
   class: File
   path: /home/cas/amplicon-examples/qiime2-test/silva132_99_ref_taxonomy.qza
+trunc_q: 0
