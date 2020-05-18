@@ -28,7 +28,6 @@ inputs:
     type: string
     input_binding:
       "--output-dir"
-
 outputs:
   rarefied_table:
   outputBinding:
