@@ -19,7 +19,7 @@ inputs:
     default: core-metrics-results
 outputs:
   output_directory:
-    type: File
+    type: Directory
     outputBinding:
       glob: $(inputs.output_dir)
 
