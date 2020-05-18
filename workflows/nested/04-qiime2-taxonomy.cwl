@@ -32,7 +32,7 @@ outputs:
 
 steps:
   feature-classify:
-    run: ../tools/qiime2-feature-classifier-classify-consensus-vsearch.cwl
+    run: ../../tools/qiime2-feature-classifier-classify-consensus-vsearch.cwl
     in:
       rep_seqs: representative_sequences_artifact
       reference_reads: reference_reads_file
@@ -41,7 +41,7 @@ steps:
     out:
       - out_taxa
   taxonomy-visualization:
-    run: ../tools/qiime2-metadata-tabulate.cwl
+    run: ../../tools/qiime2-metadata-tabulate.cwl
     in:
       input_file: feature-classify/out_taxa
       visualization_filename: taxonomy_visualization_file_name

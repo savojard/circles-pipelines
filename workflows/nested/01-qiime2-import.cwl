@@ -26,7 +26,7 @@ outputs:
 
 steps:
   import_data:
-    run: ../tools/qiime2-tools-import.cwl
+    run: ../../tools/qiime2-tools-import.cwl
     in:
       input_path: manifest_file
       input_type: input_type

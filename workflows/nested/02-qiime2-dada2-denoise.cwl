@@ -54,7 +54,7 @@ outputs:
 
 steps:
   dada2-denoise:
-    run: ../tools/qiime2-dada2-denoise-paired.cwl
+    run: ../../tools/qiime2-dada2-denoise-paired.cwl
     in:
       demultiplexed_seqs: demux_sequences_artifact
       trim_left_f: trim_left_f
@@ -70,7 +70,7 @@ steps:
       - denoising_stats
 
   dada2-visualization:
-    run: ../tools/qiime2-metadata-tabulate.cwl
+    run: ../../tools/qiime2-metadata-tabulate.cwl
     in:
       input_file: dada2-denoise/denoising_stats
       visualization_filename: denoise_stat_visualization_file_name
