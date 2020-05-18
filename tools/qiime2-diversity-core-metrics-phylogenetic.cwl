@@ -34,10 +34,10 @@ inputs:
     inputBinding:
       prefix: "--output-dir"
 outputs:
-  rarefied_table:
-    type: File
+  output_directory:
+    type: Directory
     outputBinding:
-      glob: $(inputs.output_dir)/rarefied_table.qza
+      glob: $(inputs.output_dir)
 
 
 baseCommand: ["qiime", "diversity", "core-metrics-phylogenetic"]

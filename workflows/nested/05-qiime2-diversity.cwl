@@ -18,9 +18,9 @@ inputs:
     type: string
     default: core-metrics-results
 outputs:
-  rarefied_table_artifact:
+  output_directory:
     type: File
-    outputSource: core-metrics-calculation/rarefied_table
+    outputBinding: $(inputs.output_dir)
 
 steps:
   core-metrics-calculation:
@@ -32,4 +32,4 @@ steps:
       sampling_depth: sampling_depth
       output_dir: output_dir
     out:
-      - rarefied_table
+      - output_directory
