@@ -1,9 +1,9 @@
 manifest_file:
   class: File
-  path: /home/condasys/qiime2-test/running-example.manifest.tsv
+  path: /home/cas/amplicon-examples/qiime2-test/running-example.manifest.tsv
 reference_reads_file:
   class: File
-  path: /home/condasys/qiime2-test/silva132_99.qza
+  path: /home/cas/amplicon-examples/qiime2-test/silva132_99.qza
 reference_taxonomy_file:
   class: File
-  path: /home/condasys/qiime2-test/silva132_99_ref_taxonomy.qza
+  path: /home/cas/amplicon-examples/qiime2-test/silva132_99_ref_taxonomy.qza
