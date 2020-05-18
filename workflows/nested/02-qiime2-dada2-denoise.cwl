@@ -30,10 +30,10 @@ inputs:
     default: 0
   trunc_len_f:
     type: int
-    default: 20
+    default: 0
   trunc_len_r:
     type: int
-    default: 20
+    default: 0
   trunc_q:
     type: int
     default: 20
