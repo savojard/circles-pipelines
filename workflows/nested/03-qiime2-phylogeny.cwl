@@ -44,7 +44,7 @@ steps:
     out:
       - alignment
   mask_representative_sequences:
-    run: ../tools/qiime2-alignment-mask.cwl
+    run: ../../tools/qiime2-alignment-mask.cwl
     in:
       alignment: align_representative_sequences/alignment
       masked_aligned_rep_seqs_filename: masked_aligned_rep_seqs_filename
@@ -58,7 +58,7 @@ steps:
     out:
       - unrooted_tree
   root_tree:
-    run: ../tools/qiime2-phylogeny-midpoint-root.cwl
+    run: ../../tools/qiime2-phylogeny-midpoint-root.cwl
     in:
       tree: create_tree_from_alignment/unrooted_tree
       rooted_tree_filename: rooted_tree_filename
