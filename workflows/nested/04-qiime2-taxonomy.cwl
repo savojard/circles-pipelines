@@ -7,6 +7,10 @@ label: "qiime2 perform taxonomic classification"
 inputs:
   representative_sequences_artifact:
     type: File
+  otu_table_artifact:
+    type: File
+  sample_metadata:
+    type: File
   reference_reads_file:
     type: File
     label: "path to the reference reads file for taxonomic classification"
@@ -21,6 +25,10 @@ inputs:
     type: string
     label: "name of assigned taxonomy visualization artifact"
     default: taxonomy.qzv
+  taxa_barplot_file_name:
+    type: string
+    label: "name of the barplot file"
+    default: taxa-barplot.qzv
 
 outputs:
   taxonomy_artifact:
@@ -29,6 +37,9 @@ outputs:
   taxonomy_visualization_artifact:
     type: File
     outputSource: taxonomy-visualization/visualization_artifact
+  taxa_barplot_artifact:
+    type: File
+    outputSource: barplot/taxa_bar_plots
 
 steps:
   feature-classify:
@@ -47,3 +58,12 @@ steps:
       visualization_filename: taxonomy_visualization_file_name
     out:
       - visualization_artifact
+  barplot:
+    run: ../../tools/qiime2-taxa-barplot.cwl
+    in:
+      table: otu_table_artifact
+      taxonomy: feature-classify/taxonomy_file_name
+      sample_metadata: sample_metadata
+      taxa_bar_plots_filename: taxa_barplot_file_name
+    out:
+      - taxa_bar_plots

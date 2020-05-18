@@ -38,6 +38,9 @@ outputs:
   taxonomy_visualization_artifact:
     type: File
     outputSource: taxonomy/taxonomy_visualization_artifact
+  taxa_barplot_artifact:
+    type: File
+    outputSource: taxonomy/taxa_barplot_artifact
   aligned_repr_seq_artifact:
     type: File
     outputSource: phylogeny/aligned_repr_seq_artifact
@@ -86,9 +89,12 @@ steps:
       representative_sequences_artifact: dada2/repr_seq_artifact
       reference_reads_file: reference_reads_file
       reference_taxonomy_file: reference_taxonomy_file
+      sample_metadata: sample_metadata
+      otu_table_artifact: dada2/otu_table_artifact
     out:
       - taxonomy_artifact
       - taxonomy_visualization_artifact
+      - taxa_barplot_artifact
   diversity:
     run: nested/05-qiime2-diversity.cwl
     in:
