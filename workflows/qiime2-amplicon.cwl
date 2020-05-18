@@ -39,7 +39,7 @@ steps:
   import_data:
     run: nested/01-qiime2-import.cwl
     in:
-      input_path: manifest_file
+      manifest_file: manifest_file
     out:
       - imported_sequences_artifact
   dada2:
