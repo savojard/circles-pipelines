@@ -20,9 +20,8 @@ inputs:
 outputs:
   output_directory:
     type: Directory
-    outputBinding:
-      glob: $(inputs.output_dir)
-
+    outputSource: core-metrics-calculation/output_directory
+  
 steps:
   core-metrics-calculation:
     run: ../../tools/qiime2-diversity-core-metrics-phylogenetic.cwl
