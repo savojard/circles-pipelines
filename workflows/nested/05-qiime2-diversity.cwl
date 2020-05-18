@@ -18,10 +18,10 @@ inputs:
     type: string
     default: core-metrics-results
 outputs:
-  output_directory:
+  core_metrics_output_directory:
     type: Directory
     outputSource: core-metrics-calculation/output_directory
-  
+
 steps:
   core-metrics-calculation:
     run: ../../tools/qiime2-diversity-core-metrics-phylogenetic.cwl

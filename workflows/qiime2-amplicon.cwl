@@ -7,13 +7,14 @@ label: "Perform complete 16S analysis with Qiime2"
 inputs:
   manifest_file:
     type: File
+  sample_metadata:
+    type: File
   reference_reads_file:
     type: File
   reference_taxonomy_file:
     type: File
   trunc_q:
     type: int
-
 
 outputs:
   imported_sequences_artifact:
@@ -49,6 +50,10 @@ outputs:
   rooted_tree_artifact:
     type: File
     outputSource: phylogeny/rooted_tree_artifact
+  core_metrics_output_directory:
+    type: Directory
+    outputSource: diversity/core_metrics_output_directory
+
 steps:
   import_data:
     run: nested/01-qiime2-import.cwl
@@ -84,3 +89,11 @@ steps:
     out:
       - taxonomy_artifact
       - taxonomy_visualization_artifact
+  diversity:
+    run: nested/05-qiime2-diversity.cwl
+    in:
+      rooted_tree_artifact: phylogeny/rooted_tree_artifact
+      otu_table_artifact: dada2/otu_table_artifact
+      sample_metadata: sample_metadata
+    out:
+      - core_metrics_output_directory
