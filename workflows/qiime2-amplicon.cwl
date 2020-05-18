@@ -14,6 +14,7 @@ inputs:
   trunc_q:
     type: int
 
+
 outputs:
   imported_sequences_artifact:
     type: File
