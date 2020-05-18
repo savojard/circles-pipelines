@@ -13,7 +13,7 @@ inputs:
     type: File
   sampling_depth:
     type: int
-    default: 500
+    default: 5
   output_dir:
     type: string
     default: core-metrics-results
