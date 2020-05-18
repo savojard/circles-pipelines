@@ -62,7 +62,7 @@ steps:
     run: ../../tools/qiime2-taxa-barplot.cwl
     in:
       table: otu_table_artifact
-      taxonomy: feature-classify/taxonomy_file_name
+      taxonomy: feature-classify/out_taxa
       sample_metadata: sample_metadata
       taxa_bar_plots_filename: taxa_barplot_file_name
     out:
