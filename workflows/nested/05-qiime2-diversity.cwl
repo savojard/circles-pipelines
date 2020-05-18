@@ -20,7 +20,8 @@ inputs:
 outputs:
   output_directory:
     type: File
-    outputBinding: $(inputs.output_dir)
+    outputBinding:
+      glob: $(inputs.output_dir)
 
 steps:
   core-metrics-calculation:
