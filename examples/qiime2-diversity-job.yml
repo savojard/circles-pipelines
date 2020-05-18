@@ -1,0 +1,9 @@
+rooted_tree_artifact:
+  class: File
+  path: /home/cas/circles-pipelines/workflows/rooted-tree.qza
+otu_table_artifact:
+  class: File
+  path: /home/cas/circles-pipelines/workflows/dada2-table.qza
+sample_metadata:
+  class: File
+  path: /home/cas/amplicon-examples/qiime2-test/metadata.tsv
