@@ -11,27 +11,27 @@ inputs:
   input_tree:
     type: File
     label: "input tree"
-    input_binding:
+    inputBinding:
       prefix: "--i-phylogeny"
   input_table:
     label: "input table"
     type: File
-    input_binding:
+    inputBinding:
       prefix: "--i-table"
   sample_metadata:
     type: File
     label: "sample metadata tsv"
-    input_binding:
+    inputBinding:
       prefix: "--m-metadata-file"
   sampling_depth:
     type: int
     label: "sample depth"
-    input_binding:
+    inputBinding:
       prefix: "--p-sampling-depth"
   output_dir:
     type: string
     label: "output directory"
-    input_binding:
+    inputBinding:
       prefix: "--output-dir"
 outputs:
   rarefied_table:
