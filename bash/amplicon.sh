@@ -1,6 +1,10 @@
 #!/bin/bash
 
 
+function logmsg {
+  echo "[$(date -R)]: $1"
+}
+
 if [ $# -eq 0 ]
 then
     echo -e "\n$0 options
@@ -115,11 +119,13 @@ q2diversity="qiime diversity core-metrics-phylogenetic"
 # - import format: "PairedEndFastqManifestPhred33V2"
 # Output:
 # - imported sequence artifact (imported-sequences.qza)
+logmsg 'Step0: Importing data...'
 ${q2import} --input-path ${manifest_file} \
             --output-path ${imported_sequences_artifact} \
             --type ${IMPORT_TYPE} \
             --input-format ${IMPORT_FORMAT} \
             1> ${log_stdout} 2> ${log_stderr}
+logmsg 'Step0: done.'
 
 # Step 1.1: running dada2 denoising on imported sequences
 # Input:
@@ -131,6 +137,7 @@ ${q2import} --input-path ${manifest_file} \
 # - representative sequences artifact (dada2-rep_seq.qza)
 # - otu table artifact (dada2-table.qza)
 # - denoising stat artifact (dada2-stats.qza)
+logmsg 'Step1: Denoising data...'
 ${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
           --p-trim-left-f ${TRIM_LEFT_F} \
           --p-trim-left-r ${TRIM_LEFT_R} \
@@ -149,7 +156,7 @@ ${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
 ${q2tabulate} --m-input-file ${denoise_stat_artifact} \
               --o-visualization ${denoise_stat_visualization_artifact} \
               1> ${log_stdout} 2> ${log_stderr}
-
+logmsg 'Step1: done.'
 # Step 2.1: taxonomic classification of ASV using consensus vsearch
 # Input:
 # - representative sequences artifact
@@ -158,6 +165,7 @@ ${q2tabulate} --m-input-file ${denoise_stat_artifact} \
 # - max accepts
 # Output:
 # - taxonomy artifact (taxonomy.qza)
+logmsg 'Step2: Taxonomic classification...'
 ${q2classify} --i-query ${repr_seq_artifact} \
               --i-reference-reads ${reference_reads_file} \
               --i-reference-taxonomy ${reference_taxonomy_file} \
@@ -184,12 +192,13 @@ ${q2barplot} --i-table ${otu_table_artifact} \
              --m-metadata-file ${sample_metadata} \
              --o-visualization ${taxa_barplot_artifact} \
              1> ${log_stdout} 2> ${log_stderr}
-
+logmsg 'Step2: done.'
 # Step 3.1: building ASV multiple sequence alignment using MAFFT
 # Input:
 # - representative sequences artifact
 # Output:
 # - aligned sequences artifact (aligned-rep-seqs.qza)
+logmsg 'Step3: Phylogenitic analysis...'
 ${q2mafft} --i-sequences ${repr_seq_artifact} \
            --o-alignment ${aligned_repr_seq_artifact} \
            1> ${log_stdout} 2> ${log_stderr}
@@ -217,7 +226,7 @@ ${q2fasttree} --i-alignment ${masked_repr_seq_artifact} \
 ${q2midpoint} --i-tree ${unrooted_tree_artifact} \
               --o-rooted-tree ${rooted_tree_artifact} \
               1> ${log_stdout} 2> ${log_stderr}
-
+logmsg 'Step3: done.'
 # Step 4: computing alpha and beta diversity metrics
 # Input:
 # - rooted tree artifact
@@ -226,9 +235,11 @@ ${q2midpoint} --i-tree ${unrooted_tree_artifact} \
 # - sampling depth
 # Output:
 # - core metrics output directory (core-metrics-results)
+logmsg 'Step4: Diversity analysis...'
 ${q2diversity} --i-phylogeny ${rooted_tree_artifact} \
                --i-table ${otu_table_artifact} \
                --m-metadata-file ${sample_metadata} \
                --p-sampling-depth ${sampling_depth} \
                --output-dir ${core_metrics_output_directory} \
                1> ${log_stdout} 2> ${log_stderr}
+logmsg 'Step4: done.'
