@@ -36,7 +36,7 @@ while [ $# -gt 0 ] ; do
     in
         -m|--manifest) manifest_file=$2; shift;;
         -s|--sample_metadata) sample_metadata=$2; shift;;
-        -q|--trunc_q) trunc_q=$2: shift;;
+        -q|--trunc_q) trunc_q=$2; shift;;
         -r|--reference_reads) reference_reads_file=$2; shift;;
         -t|--reference_taxonomy) reference_taxonomy_file=$2; shift;;
         -a|--max_accepts) max_accepts=$2; shift;;
