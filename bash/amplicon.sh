@@ -198,7 +198,7 @@ logmsg 'Step2: done.'
 # - representative sequences artifact
 # Output:
 # - aligned sequences artifact (aligned-rep-seqs.qza)
-logmsg 'Step3: Phylogenitic analysis...'
+logmsg 'Step3: Phylogenetic analysis...'
 ${q2mafft} --i-sequences ${repr_seq_artifact} \
            --o-alignment ${aligned_repr_seq_artifact} \
            1> ${log_stdout} 2> ${log_stderr}
