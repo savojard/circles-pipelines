@@ -1,4 +1,5 @@
 #!/bin/bash
+# Pipeline for amplicon sequencing analysis
 
 
 function logmsg {
