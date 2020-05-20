@@ -93,7 +93,7 @@ core_metrics_output_directory=core-metrics-results
 q2import="qiime tools import"
 q2dada="qiime dada2 denoise-paired"
 q2tabulate="qiime metadata tabulate"
-q2classify="qiime feature-classify classify-consensus-vsearch"
+q2classify="qiime feature-classifier classify-consensus-vsearch"
 q2barplot="qiime taxa barplot"
 q2mafft="qiime alignment mafft"
 q2mask="qiime alignment mask"
@@ -108,10 +108,10 @@ q2diversity="qiime diversity core-metrics-phylogenetic"
 # - import format: "PairedEndFastqManifestPhred33V2"
 # Output:
 # - imported sequence artifact (imported-sequences.qza)
-${q2import} --input-path ${manifest_file} \
-            --output-path ${imported_sequences_artifact} \
-            --type ${IMPORT_TYPE} \
-            --input-format ${IMPORT_FORMAT}
+#${q2import} --input-path ${manifest_file} \
+#            --output-path ${imported_sequences_artifact} \
+#            --type ${IMPORT_TYPE} \
+#            --input-format ${IMPORT_FORMAT}
 
 # Step 1.1: running dada2 denoising on imported sequences
 # Input:
@@ -123,15 +123,15 @@ ${q2import} --input-path ${manifest_file} \
 # - representative sequences artifact (dada2-rep_seq.qza)
 # - otu table artifact (dada2-table.qza)
 # - denoising stat artifact (dada2-stats.qza)
-${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
-          --p-trim-left-f ${TRIM_LEFT_F} \
-          --p-trim-left-r ${TRIM_LEFT_R} \
-          --p-trunc-len-f ${TRUNC_LEN_F} \
-          --p-trunc-len-r ${TRUNC_LEN_R} \
-          --p-trunc-q ${trunc_q} \
-          --o-representative-sequences ${repr_seq_artifact} \
-          --o-table ${otu_table_artifact} \
-          --o-denoising-stats ${denoise_stat_artifact}
+#${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
+#          --p-trim-left-f ${TRIM_LEFT_F} \
+#          --p-trim-left-r ${TRIM_LEFT_R} \
+#          --p-trunc-len-f ${TRUNC_LEN_F} \
+#          --p-trunc-len-r ${TRUNC_LEN_R} \
+#          --p-trunc-q ${trunc_q} \
+#          --o-representative-sequences ${repr_seq_artifact} \
+#          --o-table ${otu_table_artifact} \
+#          --o-denoising-stats ${denoise_stat_artifact}
 # Step 1.2: tabulating denoise statistics for visualization
 # Input:
 # - denoising stat artifact
