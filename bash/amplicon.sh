@@ -111,7 +111,7 @@ q2diversity="qiime diversity core-metrics-phylogenetic"
 ${q2import} --input-path ${manifest_file} \
             --output-path ${imported_sequences_artifact} \
             --type ${IMPORT_TYPE} \
-            --input-format ${IMPORT_TYPE}
+            --input-format ${IMPORT_FORMAT}
 
 # Step 1.1: running dada2 denoising on imported sequences
 # Input:
