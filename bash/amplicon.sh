@@ -97,7 +97,7 @@ otu_table_artifact=${output_dir}/dada2-table.qza
 otu_table_export_dir=${output_dir}/dada2-table
 otu_table_export_biom_file=${output_dir}/dada2-table/feature-table.biom
 otu_table_export_txt_file=${output_dir}/dada2-table/feature-table-summarize.txt
-out_table_rarefied_artifact=${output_dir}/dada2-table-rarefied.qza
+otu_table_rarefied_artifact=${output_dir}/dada2-table-rarefied.qza
 denoise_stat_artifact=${output_dir}/dada2-stats.qza
 denoise_stat_visualization_artifact=${output_dir}/dada2-stats.qzv
 taxonomy_artifact=${output_dir}/taxonomy.qza
@@ -169,7 +169,7 @@ biom summarize-table -i ${otu_table_export_biom_file} \
 # tentative:
 high=1000000000000
 sampling_depth=`awk -v m=${min_depth} -v high=${high} 'BEGIN{x=high;i=0;}{if (i==1) { if (int($2)<x && int($2)>=m) { x=int($2) } } if ($2=="detail:"){i=1;}}END{print x;}' ${otu_table_export_txt_file}`
-echo ${sampling_depth}
+logmsg "Inferred sampling depth: ${sampling_depth}"
 ${q2rarefy} --i-table ${otu_table_artifact} \
             --o-rarefied-table ${otu_table_rarefied_artifact} \
             --p-sampling-depth ${sampling_depth} \
@@ -264,7 +264,7 @@ logmsg 'Step3: done.'
 # - core metrics output directory (core-metrics-results)
 logmsg 'Step4: Diversity analysis...'
 ${q2diversity} --i-phylogeny ${rooted_tree_artifact} \
-               --i-table ${otu_table_rarefied_artifact} \
+               --i-table ${otu_table_artifact} \
                --m-metadata-file ${sample_metadata} \
                --p-sampling-depth ${sampling_depth} \
                --output-dir ${core_metrics_output_directory} \
