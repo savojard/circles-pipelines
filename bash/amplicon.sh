@@ -12,6 +12,7 @@ then
     -m/--manifest: input manifest file in TSV format
     -s/--sample_metadata: input sample metadata file in TSV format
     -q/--trunc_q: qulity score threshold for trimming
+    -p/--trim_params: comma-separeted trim_left_f,trim_left_r,trunc_len_f,trunc_len_r
     -r/--reference_reads: input reference reads file for classification
     -t/--reference_taxonomy: input reference taxonomy for classification
     -a/--max_accepts: max accepts paramenter for classification
@@ -20,21 +21,26 @@ then
     "
     exit 1
 fi
-
-
 # -----------------------
+
+# Paramenters
 manifest_file=''
 sample_metadata=''
 trunc_q=''
 reference_reads_file=''
 reference_taxonomy_file=''
-max_accepts=''
-min_depth=''
-output_dir=''
+max_accepts=100
+min_depth=10000
+output_dir=qiime2-amplicon-analysis
+trim_params="0,0,0,0"
+# Fixed paramenters
+IMPORT_TYPE="SampleData[PairedEndSequencesWithQuality]"
+IMPORT_FORMAT="PairedEndFastqManifestPhred33V2"
 
-short="m:s:q:r:t:a:d:o:"
-long="manifest:,sample_metadata:,trunc_q:reference_reads:,"
+short="m:s:q:p:r:t:a:d:o:"
+long="manifest:,sample_metadata:,trunc_q:,trim_params:,reference_reads:,"
 long=${long}"reference_taxonomy:,max_accepts:,min_depth:,output_dir:,"
+long=${long}""
 OPTS=$(getopt -o ${short} -l ${long} -- "$@")
 eval set -- "$OPTS"
 
@@ -44,6 +50,7 @@ while [ $# -gt 0 ] ; do
         -m|--manifest) manifest_file=$2; shift;;
         -s|--sample_metadata) sample_metadata=$2; shift;;
         -q|--trunc_q) trunc_q=$2; shift;;
+        -p|--trim_params) trim_params=$2; shift;;
         -r|--reference_reads) reference_reads_file=$2; shift;;
         -t|--reference_taxonomy) reference_taxonomy_file=$2; shift;;
         -a|--max_accepts) max_accepts=$2; shift;;
@@ -74,17 +81,14 @@ if ! test -f ${reference_taxonomy} ; then
   exit 1
 fi
 
+trim_left_f=$(echo ${trim_params} | cut -d"," -f 1)
+trim_left_r=$(echo ${trim_params} | cut -d"," -f 2)
+trunc_len_f=$(echo ${trim_params} | cut -d"," -f 3)
+trunc_len_r=$(echo ${trim_params} | cut -d"," -f 4)
+
 mkdir -p ${output_dir}
 log_stdout=${output_dir}/analysis.out.log
 log_stderr=${output_dir}/analysis.err.log
-
-# Fixed paramenters
-IMPORT_TYPE="SampleData[PairedEndSequencesWithQuality]"
-IMPORT_FORMAT="PairedEndFastqManifestPhred33V2"
-TRIM_LEFT_F=0
-TRIM_LEFT_R=0
-TRUNC_LEN_F=0
-TRUNC_LEN_R=0
 
 # Filenames
 imported_sequences_artifact=${output_dir}/imported-sequences.qza
@@ -93,7 +97,7 @@ otu_table_artifact=${output_dir}/dada2-table.qza
 otu_table_export_dir=${output_dir}/dada2-table
 otu_table_export_biom_file=${output_dir}/dada2-table/feature-table.biom
 otu_table_export_txt_file=${output_dir}/dada2-table/feature-table-summarize.txt
-out_table_rarefied_artifact=${output_dir}/dada2-rarefied-table.qza
+out_table_rarefied_artifact=${output_dir}/dada2-table-rarefied.qza
 denoise_stat_artifact=${output_dir}/dada2-stats.qza
 denoise_stat_visualization_artifact=${output_dir}/dada2-stats.qzv
 taxonomy_artifact=${output_dir}/taxonomy.qza
@@ -146,10 +150,10 @@ logmsg 'Step0: done.'
 # - denoising stat artifact (dada2-stats.qza)
 logmsg 'Step1: Denoising data...'
 ${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
-          --p-trim-left-f ${TRIM_LEFT_F} \
-          --p-trim-left-r ${TRIM_LEFT_R} \
-          --p-trunc-len-f ${TRUNC_LEN_F} \
-          --p-trunc-len-r ${TRUNC_LEN_R} \
+          --p-trim-left-f ${trim_left_f} \
+          --p-trim-left-r ${trim_left_r} \
+          --p-trunc-len-f ${trunc_len_f} \
+          --p-trunc-len-r ${trunc_len_r} \
           --p-trunc-q ${trunc_q} \
           --o-representative-sequences ${repr_seq_artifact} \
           --o-table ${otu_table_artifact} \
