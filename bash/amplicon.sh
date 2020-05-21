@@ -149,19 +149,19 @@ logmsg 'Step0: done.'
 # - otu table artifact (dada2-table.qza)
 # - denoising stat artifact (dada2-stats.qza)
 logmsg 'Step1: Denoising data...'
-${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
-          --p-trim-left-f ${trim_left_f} \
-          --p-trim-left-r ${trim_left_r} \
-          --p-trunc-len-f ${trunc_len_f} \
-          --p-trunc-len-r ${trunc_len_r} \
-          --p-trunc-q ${trunc_q} \
-          --o-representative-sequences ${repr_seq_artifact} \
-          --o-table ${otu_table_artifact} \
-          --o-denoising-stats ${denoise_stat_artifact} \
-          1> ${log_stdout} 2> ${log_stderr}
-${q2export} --input-path ${otu_table_artifact} \
-            --output-path ${otu_table_export_dir} \
-            1> ${log_stdout} 2> ${log_stderr}
+#${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
+#          --p-trim-left-f ${trim_left_f} \
+#          --p-trim-left-r ${trim_left_r} \
+#          --p-trunc-len-f ${trunc_len_f} \
+#          --p-trunc-len-r ${trunc_len_r} \
+#          --p-trunc-q ${trunc_q} \
+#          --o-representative-sequences ${repr_seq_artifact} \
+#          --o-table ${otu_table_artifact} \
+#          --o-denoising-stats ${denoise_stat_artifact} \
+#          1> ${log_stdout} 2> ${log_stderr}
+#${q2export} --input-path ${otu_table_artifact} \
+#            --output-path ${otu_table_export_dir} \
+#            1> ${log_stdout} 2> ${log_stderr}
 biom summarize-table -i ${otu_table_export_biom_file} \
                      -o ${otu_table_export_txt_file} \
                      1> ${log_stdout} 2> ${log_stderr}
@@ -169,6 +169,7 @@ biom summarize-table -i ${otu_table_export_biom_file} \
 # tentative:
 
 sampling_depth=`awk -v m=${min_depth} '{if (i==1) { if ($2<x && $2>=m) { x=$2; } } if ($1=="Counts/sample") i=1;}END{print x;}' ${otu_table_export_txt_file}`
+echo ${sampling_depth}
 ${q2rarefy} --i-table ${otu_table_artifact} \
             --o-rarefied-table ${otu_table_rarefied_artifact} \
             --p-sampling-depth ${sampling_depth} \
