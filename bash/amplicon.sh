@@ -164,7 +164,7 @@ ${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
           1>> ${log_stdout} 2>> ${log_stderr}
 ${q2export} --input-path ${otu_table_artifact} \
             --output-path ${otu_table_export_dir} \
-            1> ${log_stdout} 2> ${log_stderr}
+            1>> ${log_stdout} 2>> ${log_stderr}
 biom summarize-table -i ${otu_table_export_biom_file} \
                      -o ${otu_table_export_txt_file} \
                      1>> ${log_stdout} 2>> ${log_stderr}
