@@ -167,8 +167,8 @@ biom summarize-table -i ${otu_table_export_biom_file} \
 # tentative:
 awks='{if (i==1) {if ($2<x && $2>=10000) {x=$2}} if ($1=="Counts/sample") i=1; }END{print x}'
 sampling_depth=`awk -v m=${min_depth} ${awks} ${otu_table_export_txt_file}`
-${q2rarefy} --input-path ${otu_table_artifact} \
-            --output-path ${otu_table_rarefied_artifact} \
+${q2rarefy} --i-table ${otu_table_artifact} \
+            --o-rarefied-table ${otu_table_rarefied_artifact} \
             --p-sampling-depth ${sampling_depth}
 
 # Step 1.2: tabulating denoise statistics for visualization
