@@ -131,11 +131,11 @@ q2diversity="qiime diversity core-metrics-phylogenetic"
 # Output:
 # - imported sequence artifact (imported-sequences.qza)
 logmsg 'Step0: Importing data...'
-#${q2import} --input-path ${manifest_file} \
-#            --output-path ${imported_sequences_artifact} \
-#            --type ${IMPORT_TYPE} \
-#            --input-format ${IMPORT_FORMAT} \
-#            1> ${log_stdout} 2> ${log_stderr}
+${q2import} --input-path ${manifest_file} \
+            --output-path ${imported_sequences_artifact} \
+            --type ${IMPORT_TYPE} \
+            --input-format ${IMPORT_FORMAT} \
+            1> ${log_stdout} 2> ${log_stderr}
 logmsg 'Step0: done.'
 
 # Step 1.1: running dada2 denoising on imported sequences
@@ -149,19 +149,19 @@ logmsg 'Step0: done.'
 # - otu table artifact (dada2-table.qza)
 # - denoising stat artifact (dada2-stats.qza)
 logmsg 'Step1: Denoising data...'
-#${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
-#          --p-trim-left-f ${trim_left_f} \
-#          --p-trim-left-r ${trim_left_r} \
-#          --p-trunc-len-f ${trunc_len_f} \
-#          --p-trunc-len-r ${trunc_len_r} \
-#          --p-trunc-q ${trunc_q} \
-#          --o-representative-sequences ${repr_seq_artifact} \
-#          --o-table ${otu_table_artifact} \
-#          --o-denoising-stats ${denoise_stat_artifact} \
-#          1> ${log_stdout} 2> ${log_stderr}
-#${q2export} --input-path ${otu_table_artifact} \
-#            --output-path ${otu_table_export_dir} \
-#            1> ${log_stdout} 2> ${log_stderr}
+${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
+          --p-trim-left-f ${trim_left_f} \
+          --p-trim-left-r ${trim_left_r} \
+          --p-trunc-len-f ${trunc_len_f} \
+          --p-trunc-len-r ${trunc_len_r} \
+          --p-trunc-q ${trunc_q} \
+          --o-representative-sequences ${repr_seq_artifact} \
+          --o-table ${otu_table_artifact} \
+          --o-denoising-stats ${denoise_stat_artifact} \
+          1> ${log_stdout} 2> ${log_stderr}
+${q2export} --input-path ${otu_table_artifact} \
+            --output-path ${otu_table_export_dir} \
+            1> ${log_stdout} 2> ${log_stderr}
 biom summarize-table -i ${otu_table_export_biom_file} \
                      -o ${otu_table_export_txt_file} \
                      1> ${log_stdout} 2> ${log_stderr}
