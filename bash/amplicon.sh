@@ -90,6 +90,9 @@ mkdir -p ${output_dir}
 log_stdout=${output_dir}/analysis.out.log
 log_stderr=${output_dir}/analysis.err.log
 
+cat /dev/null > ${log_stdout}
+cat /dev/null > ${log_stderr}
+
 # Filenames
 imported_sequences_artifact=${output_dir}/imported-sequences.qza
 repr_seq_artifact=${output_dir}/dada2-rep_seq.qza
@@ -135,7 +138,7 @@ ${q2import} --input-path ${manifest_file} \
             --output-path ${imported_sequences_artifact} \
             --type ${IMPORT_TYPE} \
             --input-format ${IMPORT_FORMAT} \
-            1> ${log_stdout} 2> ${log_stderr}
+            1>> ${log_stdout} 2>> ${log_stderr}
 logmsg 'Step0: done.'
 
 # Step 1.1: running dada2 denoising on imported sequences
@@ -158,13 +161,13 @@ ${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
           --o-representative-sequences ${repr_seq_artifact} \
           --o-table ${otu_table_artifact} \
           --o-denoising-stats ${denoise_stat_artifact} \
-          1> ${log_stdout} 2> ${log_stderr}
+          1>> ${log_stdout} 2>> ${log_stderr}
 ${q2export} --input-path ${otu_table_artifact} \
             --output-path ${otu_table_export_dir} \
             1> ${log_stdout} 2> ${log_stderr}
 biom summarize-table -i ${otu_table_export_biom_file} \
                      -o ${otu_table_export_txt_file} \
-                     1> ${log_stdout} 2> ${log_stderr}
+                     1>> ${log_stdout} 2>> ${log_stderr}
 # TODO: extract --p-sampling-depth
 # tentative:
 high=1000000000000
@@ -173,7 +176,7 @@ logmsg "Inferred sampling depth: ${sampling_depth}"
 ${q2rarefy} --i-table ${otu_table_artifact} \
             --o-rarefied-table ${otu_table_rarefied_artifact} \
             --p-sampling-depth ${sampling_depth} \
-            1> ${log_stdout} 2> ${log_stderr}
+            1>> ${log_stdout} 2>> ${log_stderr}
 
 # Step 1.2: tabulating denoise statistics for visualization
 # Input:
@@ -182,7 +185,7 @@ ${q2rarefy} --i-table ${otu_table_artifact} \
 # - denoisinf stat visualization artifact (dada2-stats.qzv)
 ${q2tabulate} --m-input-file ${denoise_stat_artifact} \
               --o-visualization ${denoise_stat_visualization_artifact} \
-              1> ${log_stdout} 2> ${log_stderr}
+              1>> ${log_stdout} 2>> ${log_stderr}
 logmsg 'Step1: done.'
 # Step 2.1: taxonomic classification of ASV using consensus vsearch
 # Input:
@@ -198,7 +201,7 @@ ${q2classify} --i-query ${repr_seq_artifact} \
               --i-reference-taxonomy ${reference_taxonomy_file} \
               --o-classification ${taxonomy_artifact} \
               --p-maxaccepts ${max_accepts} \
-              1> ${log_stdout} 2> ${log_stderr}
+              1>> ${log_stdout} 2>> ${log_stderr}
 # Step 2.2: visualization of the taxonomy artifact
 # Input:
 # - taxonomy artifact
@@ -206,7 +209,7 @@ ${q2classify} --i-query ${repr_seq_artifact} \
 # - taxonomy visualization artifact (taxonomy.qzv)
 ${q2tabulate} --m-input-file ${taxonomy_artifact} \
               --o-visualization ${taxonomy_visualization_artifact} \
-              1> ${log_stdout} 2> ${log_stderr}
+              1>> ${log_stdout} 2>> ${log_stderr}
 # Step 2.3: creating taxonomy bar plot
 # Input:
 # - otu table artifact
@@ -218,7 +221,7 @@ ${q2barplot} --i-table ${otu_table_rarefied_artifact} \
              --i-taxonomy ${taxonomy_artifact} \
              --m-metadata-file ${sample_metadata} \
              --o-visualization ${taxa_barplot_artifact} \
-             1> ${log_stdout} 2> ${log_stderr}
+             1>> ${log_stdout} 2>> ${log_stderr}
 logmsg 'Step2: done.'
 # Step 3.1: building ASV multiple sequence alignment using MAFFT
 # Input:
@@ -228,7 +231,7 @@ logmsg 'Step2: done.'
 logmsg 'Step3: Phylogenetic analysis...'
 ${q2mafft} --i-sequences ${repr_seq_artifact} \
            --o-alignment ${aligned_repr_seq_artifact} \
-           1> ${log_stdout} 2> ${log_stderr}
+           1>> ${log_stdout} 2>> ${log_stderr}
 # Step 3.2: masking MSA for highgly-variable positions
 # Input:
 # - aligned sequences artifact
@@ -236,7 +239,7 @@ ${q2mafft} --i-sequences ${repr_seq_artifact} \
 # - masked alignment sequences artifact (masked-aligned-rep-seqs.qza)
 ${q2mask} --i-alignment ${aligned_repr_seq_artifact} \
           --o-masked-alignment ${masked_repr_seq_artifact} \
-          1> ${log_stdout} 2> ${log_stderr}
+          1>> ${log_stdout} 2>> ${log_stderr}
 # Step 3.3: building the phylogenitc tree using FastTree
 # Input:
 # - masked alignment sequences artifact
@@ -244,7 +247,7 @@ ${q2mask} --i-alignment ${aligned_repr_seq_artifact} \
 # - unrooted tree artifact (unrooted-tree.qza)
 ${q2fasttree} --i-alignment ${masked_repr_seq_artifact} \
               --o-tree ${unrooted_tree_artifact} \
-              1> ${log_stdout} 2> ${log_stderr}
+              1>> ${log_stdout} 2>> ${log_stderr}
 # Step 3.4: setting the tree root using midpoint-root placement
 # Input:
 # - unrooted tree artifact
@@ -252,7 +255,7 @@ ${q2fasttree} --i-alignment ${masked_repr_seq_artifact} \
 # - rooted tree artifact (rooted-tree.qza)
 ${q2midpoint} --i-tree ${unrooted_tree_artifact} \
               --o-rooted-tree ${rooted_tree_artifact} \
-              1> ${log_stdout} 2> ${log_stderr}
+              1>> ${log_stdout} 2>> ${log_stderr}
 logmsg 'Step3: done.'
 # Step 4: computing alpha and beta diversity metrics
 # Input:
@@ -268,5 +271,5 @@ ${q2diversity} --i-phylogeny ${rooted_tree_artifact} \
                --m-metadata-file ${sample_metadata} \
                --p-sampling-depth ${sampling_depth} \
                --output-dir ${core_metrics_output_directory} \
-               1> ${log_stdout} 2> ${log_stderr}
+               1>> ${log_stdout} 2>> ${log_stderr}
 logmsg 'Step4: done.'
