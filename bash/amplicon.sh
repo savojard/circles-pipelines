@@ -160,16 +160,19 @@ ${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
           --o-denoising-stats ${denoise_stat_artifact} \
           1> ${log_stdout} 2> ${log_stderr}
 ${q2export} --input-path ${otu_table_artifact} \
-            --output-path ${otu_table_export_dir}
+            --output-path ${otu_table_export_dir} \
+            1> ${log_stdout} 2> ${log_stderr}
 biom summarize-table -i ${otu_table_export_biom_file} \
-                     -o ${otu_table_export_txt_file}
+                     -o ${otu_table_export_txt_file} \
+                     1> ${log_stdout} 2> ${log_stderr}
 # TODO: extract --p-sampling-depth
 # tentative:
-awks='{if (i==1) {if ($2<x && $2>=10000) {x=$2}} if ($1=="Counts/sample") i=1; }END{print x}'
+awks='{if (i==1) { if ($2<x && $2>=m) { x=$2; } } if ($1=="Counts/sample") i=1;}END{print x;}'
 sampling_depth=`awk -v m=${min_depth} ${awks} ${otu_table_export_txt_file}`
 ${q2rarefy} --i-table ${otu_table_artifact} \
             --o-rarefied-table ${otu_table_rarefied_artifact} \
-            --p-sampling-depth ${sampling_depth}
+            --p-sampling-depth ${sampling_depth} \
+            1> ${log_stdout} 2> ${log_stderr}
 
 # Step 1.2: tabulating denoise statistics for visualization
 # Input:
