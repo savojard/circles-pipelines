@@ -167,8 +167,8 @@ biom summarize-table -i ${otu_table_export_biom_file} \
                      1> ${log_stdout} 2> ${log_stderr}
 # TODO: extract --p-sampling-depth
 # tentative:
-
-sampling_depth=`awk -v m=${min_depth} '{if (i==1) { if ($2<x && $2>=m) { x=$2; } } if ($1=="Counts/sample") i=1;}END{print x;}' ${otu_table_export_txt_file}`
+high=1000000000000
+sampling_depth=`awk -v m=${min_depth} -v high=${high} 'BEGIN{x=high;i=0;}{if (i==1) { if (int($2)<x && int($2)>=m) { x=int($2) } } if ($2=="detail:"){i=1;}}END{print x;}' ${otu_table_export_txt_file}`
 echo ${sampling_depth}
 ${q2rarefy} --i-table ${otu_table_artifact} \
             --o-rarefied-table ${otu_table_rarefied_artifact} \
