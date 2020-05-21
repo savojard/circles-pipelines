@@ -15,7 +15,7 @@ then
     -r/--reference_reads: input reference reads file for classification
     -t/--reference_taxonomy: input reference taxonomy for classification
     -a/--max_accepts: max accepts paramenter for classification
-    -d/--sampling_depth: sampling depth paramenter form normalization
+    -d/--min_depth: minumum allowed depth for table rarefication
     -o/--output_dir: output directory
     "
     exit 1
@@ -29,12 +29,12 @@ trunc_q=''
 reference_reads_file=''
 reference_taxonomy_file=''
 max_accepts=''
-sampling_depth=''
+min_depth=''
 output_dir=''
 
 short="m:s:q:r:t:a:d:o:"
 long="manifest:,sample_metadata:,trunc_q:reference_reads:,"
-long=${long}"reference_taxonomy:,max_accepts:,sampling_depth:,output_dir:,"
+long=${long}"reference_taxonomy:,max_accepts:,min_depth:,output_dir:,"
 OPTS=$(getopt -o ${short} -l ${long} -- "$@")
 eval set -- "$OPTS"
 
@@ -47,7 +47,7 @@ while [ $# -gt 0 ] ; do
         -r|--reference_reads) reference_reads_file=$2; shift;;
         -t|--reference_taxonomy) reference_taxonomy_file=$2; shift;;
         -a|--max_accepts) max_accepts=$2; shift;;
-        -d|--sampling_depth) sampling_depth=$2; shift;;
+        -d|--min_depth) min_depth=$2; shift;;
         -o|--output_dir) output_dir=$2; shift;;
         (--) shift; break;;
     esac
@@ -90,6 +90,10 @@ TRUNC_LEN_R=0
 imported_sequences_artifact=${output_dir}/imported-sequences.qza
 repr_seq_artifact=${output_dir}/dada2-rep_seq.qza
 otu_table_artifact=${output_dir}/dada2-table.qza
+otu_table_export_dir=${output_dir}/dada2-table
+otu_table_export_biom_file=${output_dir}/dada2-table/feature-table.biom
+otu_table_export_txt_file=${output_dir}/dada2-table/feature-table-summarize.txt
+out_table_rarefied_artifact=${output_dir}/dada2-rarefied-table.qza
 denoise_stat_artifact=${output_dir}/dada2-stats.qza
 denoise_stat_visualization_artifact=${output_dir}/dada2-stats.qzv
 taxonomy_artifact=${output_dir}/taxonomy.qza
@@ -103,7 +107,9 @@ core_metrics_output_directory=${output_dir}/core-metrics-results
 
 # Qiime2 tools shortcuts
 q2import="qiime tools import"
+q2export="qiime tools export"
 q2dada="qiime dada2 denoise-paired"
+q2rarefy="qiime feature-table rarefy"
 q2tabulate="qiime metadata tabulate"
 q2classify="qiime feature-classifier classify-consensus-vsearch"
 q2barplot="qiime taxa barplot"
@@ -149,6 +155,18 @@ ${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
           --o-table ${otu_table_artifact} \
           --o-denoising-stats ${denoise_stat_artifact} \
           1> ${log_stdout} 2> ${log_stderr}
+${q2export} --input-path ${otu_table_artifact} \
+            --output-path ${otu_table_export_dir}
+biom summarize-table -i ${otu_table_export_biom_file} \
+                     -o ${otu_table_export_txt_file}
+# TODO: extract --p-sampling-depth
+# tentative:
+awks='{if (i==1) {if ($2<x && $2>=10000) {x=$2}} if ($1=="Counts/sample") i=1; }END{print x}'
+sampling_depth=`awk -v m=${min_depth} ${awks} ${otu_table_export_txt_file}`
+${q2rarefy} --input-path ${otu_table_artifact} \
+            --output-path ${otu_table_rarefied_artifact} \
+            --p-sampling-depth ${sampling_depth}
+
 # Step 1.2: tabulating denoise statistics for visualization
 # Input:
 # - denoising stat artifact
@@ -188,7 +206,7 @@ ${q2tabulate} --m-input-file ${taxonomy_artifact} \
 # - sample metadata
 # Output:
 # - taxa barplot artifact (taxa-barplot.qzv)
-${q2barplot} --i-table ${otu_table_artifact} \
+${q2barplot} --i-table ${otu_table_rarefied_artifact} \
              --i-taxonomy ${taxonomy_artifact} \
              --m-metadata-file ${sample_metadata} \
              --o-visualization ${taxa_barplot_artifact} \
@@ -238,7 +256,7 @@ logmsg 'Step3: done.'
 # - core metrics output directory (core-metrics-results)
 logmsg 'Step4: Diversity analysis...'
 ${q2diversity} --i-phylogeny ${rooted_tree_artifact} \
-               --i-table ${otu_table_artifact} \
+               --i-table ${otu_table_rarefied_artifact} \
                --m-metadata-file ${sample_metadata} \
                --p-sampling-depth ${sampling_depth} \
                --output-dir ${core_metrics_output_directory} \
