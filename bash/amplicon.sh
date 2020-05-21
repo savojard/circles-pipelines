@@ -9,15 +9,15 @@ function logmsg {
 if [ $# -eq 0 ]
 then
     echo -e "\n$0 options
-    -m/--manifest: input manifest file in TSV format
-    -s/--sample_metadata: input sample metadata file in TSV format
-    -q/--trunc_q: qulity score threshold for trimming
-    -p/--trim_params: comma-separeted trim_left_f,trim_left_r,trunc_len_f,trunc_len_r
-    -r/--reference_reads: input reference reads file for classification
-    -t/--reference_taxonomy: input reference taxonomy for classification
-    -a/--max_accepts: max accepts paramenter for classification
-    -d/--min_depth: minumum allowed depth for table rarefication
-    -o/--output_dir: output directory
+    -m/--manifest: input manifest file in TSV format [required]
+    -s/--sample_metadata: input sample metadata file in TSV format [required]
+    -r/--reference_reads: input reference reads file for classification [required]
+    -t/--reference_taxonomy: input reference taxonomy for classification [required]
+    -q/--trunc_q: qulity score threshold for trimming [2]
+    -p/--trim_params: comma-separeted trim_left_f,trim_left_r,trunc_len_f,trunc_len_r [0,0,0,0]
+    -a/--max_accepts: max accepts paramenter for classification [100]
+    -d/--min_depth: minumum allowed depth for table rarefication [10000]
+    -o/--output_dir: output directory [qiime2-amplicon-analysis]
     "
     exit 1
 fi
@@ -26,7 +26,7 @@ fi
 # Paramenters
 manifest_file=''
 sample_metadata=''
-trunc_q=''
+trunc_q=2
 reference_reads_file=''
 reference_taxonomy_file=''
 max_accepts=100
