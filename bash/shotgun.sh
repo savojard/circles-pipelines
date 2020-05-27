@@ -63,11 +63,17 @@ metawrap_output_dir=${output_dir}/metawrap_qc
 clean_forward_reads=${metawrap_output_dir}/final_pure_reads_1.fastq
 clean_reverse_reads=${metawrap_output_dir}/final_pure_reads_2.fastq
 metaphlan_output_file=${output_dir}/metaphlan.profile.tsv
+humann_output_dir=${output_dir}/humann-output-dir
+humann_gene_output_file=${humann_output_dir}/
+humann_pathway_output_file=${humann_output_dir}/
+humann_coverage_output_file=${humann_output_dir}/
+humann_gene_cpm_output_file=${humann_output_dir}/
+humann_pathway_cpm_output_file=${humann_output_dir}/
 # Tools shortcut
 metawrapqc="metawrap read_qc"
 metaphlan="metaphlan"
 humann="humann"
-humanncpm=""
+humanncpm="humann_renorm_table"
 
 # Step 1: read quality check, filtering and trimming
 # conda activate metawrap
@@ -90,4 +96,9 @@ ${humann} -i ${clean_forward_reads},${clean_reverse_reads} \
           --search-mode uniref90 \
           --pathways metacyc
 
+${humanncpm} --input ${humann_gene_output_file} \
+             --output ${humann_gene_cpm_output_file}
+
+${humanncpm} --input ${humann_pathway_output_file} \
+             --output ${humann_pathway_cpm_output_file}
 # conda deactivate
