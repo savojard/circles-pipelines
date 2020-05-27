@@ -64,11 +64,14 @@ clean_forward_reads=${metawrap_output_dir}/final_pure_reads_1.fastq
 clean_reverse_reads=${metawrap_output_dir}/final_pure_reads_2.fastq
 metaphlan_output_file=${output_dir}/metaphlan.profile.tsv
 humann_output_dir=${output_dir}/humann-output-dir
-humann_gene_output_file=${humann_output_dir}/
-humann_pathway_output_file=${humann_output_dir}/
-humann_coverage_output_file=${humann_output_dir}/
-humann_gene_cpm_output_file=${humann_output_dir}/
-humann_pathway_cpm_output_file=${humann_output_dir}/
+humann_output_basename=humann
+humann_gene_output_file=${humann_output_dir}/${humann_output_basename}_genefamilies.tsv
+humann_pathway_output_file=${humann_output_dir}/${humann_output_basename}_pathabundance.tsv
+humann_coverage_output_file=${humann_output_dir}/${humann_output_basename}_pathcoverage.tsv
+humann_gene_cpm_output_file=${humann_output_dir}/${humann_output_basename}_genefamilies.cpm.tsv
+humann_pathway_cpm_output_file=${humann_output_dir}/${humann_output_basename}_pathabundance.cpm.tsv
+humann_search_mode=uniref90
+humann_pathway_db=metacyc
 # Tools shortcut
 metawrapqc="metawrap read_qc"
 metaphlan="metaphlan"
@@ -91,10 +94,11 @@ ${metaphlan} --input_type fastq  --tax_lev a \
 
 ${humann} -i ${clean_forward_reads},${clean_reverse_reads} \
           --input-format fastq \
-          -o ${humann_output_dir} \
+          --output ${humann_output_dir} \
+          --output-basename ${humann_output_basename}
           --taxonomic-profile ${metaphlan_output_file} \
-          --search-mode uniref90 \
-          --pathways metacyc
+          --search-mode ${humann_search_mode} \
+          --pathways ${humann_pathway_db}
 
 ${humanncpm} --input ${humann_gene_output_file} \
              --output ${humann_gene_cpm_output_file}
