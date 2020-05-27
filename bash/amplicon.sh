@@ -2,6 +2,9 @@
 # Pipeline for amplicon sequencing analysis
 
 
+# CIRCLES_PIPELINES_ROOT is an env variable set to the pipeline root dir
+SCRIPTS_DIR=${CIRCLES_PIPELINES_ROOT}/utils
+
 function logmsg {
   echo "[$(date -R)]: $1"
 }
@@ -95,6 +98,10 @@ cat /dev/null > ${log_stderr}
 
 # Filenames
 imported_sequences_artifact=${output_dir}/imported-sequences.qza
+imported_sequences_visualization_artifact=${output_dir}/imported-sequences.qzv
+imported_sequences_vis_export_dir=${output_dir}/imported-sequences
+imported_sequences_forward_q_profile=${output_dir}/imported-sequences/forward-seven-number-summaries.csv
+imported_sequences_reverse_q_profile=${output_dir}/imported-sequences/reverse-seven-number-summaries.csv
 repr_seq_artifact=${output_dir}/dada2-rep_seq.qza
 otu_table_artifact=${output_dir}/dada2-table.qza
 otu_table_export_dir=${output_dir}/dada2-table
@@ -115,6 +122,7 @@ core_metrics_output_directory=${output_dir}/core-metrics-results
 # Qiime2 tools shortcuts
 q2import="qiime tools import"
 q2export="qiime tools export"
+q2summarize="qiime demux summarize"
 q2dada="qiime dada2 denoise-paired"
 q2rarefy="qiime feature-table rarefy"
 q2tabulate="qiime metadata tabulate"
@@ -125,7 +133,8 @@ q2mask="qiime alignment mask"
 q2fasttree="qiime phylogeny fasttree"
 q2midpoint="qiime phylogeny midpoint-root"
 q2diversity="qiime diversity core-metrics-phylogenetic"
-
+trimposition=${SCRIPTS_DIR}/trimposition.py
+awksampled=${SCRIPTS_DIR}/sampledepth.awk
 # Step 0: importing paired-end data from manifest v2 file
 # Input:
 # - manifest file
@@ -138,6 +147,12 @@ ${q2import} --input-path ${manifest_file} \
             --output-path ${imported_sequences_artifact} \
             --type ${IMPORT_TYPE} \
             --input-format ${IMPORT_FORMAT} \
+            1>> ${log_stdout} 2>> ${log_stderr}
+${q2summarize} --i-data ${imported_sequences_artifact} \
+               --o-visualization ${imported_sequences_visualization_artifact} \
+               1>> ${log_stdout} 2>> ${log_stderr}
+${q2export} --input-path ${imported_sequences_visualization_artifact} \
+            --output-path ${imported_sequences_vis_export_dir} \
             1>> ${log_stdout} 2>> ${log_stderr}
 logmsg 'Step0: done.'
 
@@ -152,6 +167,8 @@ logmsg 'Step0: done.'
 # - otu table artifact (dada2-table.qza)
 # - denoising stat artifact (dada2-stats.qza)
 logmsg 'Step1: Denoising data...'
+trunc_len_f=$(python ${trimposition} -i ${imported_sequences_forward_q_profile} -w 3 -q 20)
+trunc_len_r=$(python ${trimposition} -i ${imported_sequences_reverse_q_profile} -w 3 -q 20)
 ${q2dada} --i-demultiplexed-seqs ${imported_sequences_artifact} \
           --p-trim-left-f ${trim_left_f} \
           --p-trim-left-r ${trim_left_r} \
@@ -168,10 +185,7 @@ ${q2export} --input-path ${otu_table_artifact} \
 biom summarize-table -i ${otu_table_export_biom_file} \
                      -o ${otu_table_export_txt_file} \
                      1>> ${log_stdout} 2>> ${log_stderr}
-# TODO: extract --p-sampling-depth
-# tentative:
-high=1000000000000
-sampling_depth=`awk -v m=${min_depth} -v high=${high} 'BEGIN{x=high;i=0;}{if (i==1) { if (int($2)<x && int($2)>=m) { x=int($2) } } if ($2=="detail:"){i=1;}}END{print x;}' ${otu_table_export_txt_file}`
+sampling_depth=$(awk -v m=${min_depth} -f ${awksampled} ${otu_table_export_txt_file})
 logmsg "Inferred sampling depth: ${sampling_depth}"
 ${q2rarefy} --i-table ${otu_table_artifact} \
             --o-rarefied-table ${otu_table_rarefied_artifact} \

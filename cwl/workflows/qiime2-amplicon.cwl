@@ -1,8 +1,11 @@
+#!/usr/bin/env cwl-runner
+
 cwlVersion: v1.0
 class: Workflow
 requirements:
 - class: SubworkflowFeatureRequirement
 label: "Perform complete 16S analysis with Qiime2"
+
 
 inputs:
   manifest_file:

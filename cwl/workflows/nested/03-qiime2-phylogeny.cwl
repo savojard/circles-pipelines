@@ -6,6 +6,7 @@ requirements:
 - class: SubworkflowFeatureRequirement
 label: qiime2 create phylogenetic tree
 
+
 inputs:
   representative_sequences: File
   aligned_rep_seqs_filename:

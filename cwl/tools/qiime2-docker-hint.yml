@@ -1,3 +1,4 @@
 class: DockerRequirement
 
+
 dockerPull:  qiime2/core:2020.2

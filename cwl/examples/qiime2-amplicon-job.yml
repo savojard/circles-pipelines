@@ -3,7 +3,7 @@ manifest_file:
   path: /home/cas/amplicon-examples/qiime2-test/running-example.manifest.tsv
 sample_metadata:
   class: File
-  path: /home/cas/amplicon-examples/qiime2-test/metadata.tsv
+  path: /home/cas/amplicon-examples/qiime2-test/sample-metadata.tsv
 reference_reads_file:
   class: File
   path: /home/cas/amplicon-examples/qiime2-test/silva132_99.qza

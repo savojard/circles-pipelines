@@ -4,6 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 label: "qiime2: importing data and create output artifact"
 
+
 hints:
   - $import: qiime2-docker-hint.yml
 

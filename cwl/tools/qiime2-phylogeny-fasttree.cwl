@@ -4,6 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 label: "qiime2: Construct a phylogenetic tree with FastTree"
 
+
 hints:
   - $import: qiime2-docker-hint.yml
 

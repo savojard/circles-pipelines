@@ -6,4 +6,4 @@ otu_table_artifact:
   path: /home/cas/circles-pipelines/workflows/dada2-table.qza
 sample_metadata:
   class: File
-  path: /home/cas/amplicon-examples/qiime2-test/metadata.tsv
+  path: /home/cas/amplicon-examples/qiime2-test/sample-metadata.tsv

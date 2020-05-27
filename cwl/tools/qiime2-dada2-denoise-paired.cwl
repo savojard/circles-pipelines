@@ -4,6 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 label: "qiime2: Denoises paired-end sequences, dereplicates them, and filters chimeras"
 
+
 hints:
   - $import: qiime2-docker-hint.yml
 

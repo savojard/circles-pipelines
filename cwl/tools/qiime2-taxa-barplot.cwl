@@ -4,6 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 label: "qiime2: Produce an interactive barplot visualization of taxonomies"
 
+
 hints:
   - $import: qiime2-docker-hint.yml
 
